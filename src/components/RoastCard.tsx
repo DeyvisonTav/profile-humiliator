@@ -1,12 +1,14 @@
 'use client';
 
-import { Card, CardContent, Typography, Avatar, Button } from '@mui/material';
+import { Card, CardContent, Typography, Avatar, Button, Tooltip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import DownloadIcon from '@mui/icons-material/Download';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import PersonIcon from '@mui/icons-material/Person';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+
+(pdfMake as any).vfs = pdfFonts;
 
 interface RoastCardProps {
   roast: string;
@@ -19,7 +21,6 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
   const [isTyping, setIsTyping] = useState(true);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Extrair o username do GitHub
   const username = profileUrl.split('/').pop() || '';
   const initials = username
     .split('-')
@@ -27,54 +28,23 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
     .join('')
     .toUpperCase();
 
-  const handleDownloadPDF = async () => {
-    if (!cardRef.current) return;
+  const handleShareLinkedIn = () => {
+    const tempTextArea = document.createElement('textarea');
+    const projectUrl = process.env.NEXT_PUBLIC_PROJECT_URL || 'https://github.com/deyvisontav/profile-humiliator';
+    const shareText = `🎭 Roast Profissional baseado no meu perfil do GitHub:\n\n${roast}\n\nEste roast foi gerado pelo Profile Humiliator, um projeto que analisa perfis do GitHub de forma bem-humorada. Confira: ${projectUrl}\n\n#RoastProfissional #GitHub #HumorTech #ProfileHumiliator`;
+    
+    tempTextArea.value = shareText;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextArea);
 
-    try {
-      // Criar um clone do card para o PDF
-      const cardClone = cardRef.current.cloneNode(true) as HTMLElement;
-      
-      // Remover o botão de download do clone
-      const downloadButton = cardClone.querySelector('button');
-      if (downloadButton) {
-        downloadButton.remove();
-      }
-
-      // Ajustar o estilo do clone para o PDF
-      cardClone.style.width = '800px';
-      cardClone.style.padding = '40px';
-      cardClone.style.backgroundColor = 'transparent';
-
-      // Garantir que a imagem do perfil seja carregada
-      const avatar = cardClone.querySelector('img');
-      if (avatar) {
-        await new Promise((resolve) => {
-          avatar.onload = resolve;
-          if (avatar.complete) resolve(null);
-        });
-      }
-
-      const canvas = await html2canvas(cardClone, {
-        scale: 2,
-        backgroundColor: null,
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        imageTimeout: 15000,
-      });
-      
-      const imgData = canvas.toDataURL('image/png', 1.0);
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-      });
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save('roast-profissional.pdf');
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-    }
+    // Abrir o LinkedIn com o texto copiado
+    const linkedInUrl = 'https://www.linkedin.com/feed/';
+    window.open(linkedInUrl, '_blank');
+    
+    // Mostrar mensagem para o usuário
+    alert('O texto do seu roast foi copiado! Cole no LinkedIn para compartilhar. 😈');
   };
 
   useEffect(() => {
@@ -182,22 +152,24 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="mt-8 flex justify-end"
+              className="mt-8 flex flex-col items-end gap-4"
             >
-              <Button
-                variant="contained"
-                onClick={handleDownloadPDF}
-                startIcon={<DownloadIcon />}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white font-medium px-6 py-2"
-                sx={{
-                  backdropFilter: 'blur(10px)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  }
-                }}
-              >
-                Baixar PDF
-              </Button>
+              <Tooltip title="Se tiver coragem... 😈" arrow>
+                <Button
+                  variant="contained"
+                  onClick={handleShareLinkedIn}
+                  startIcon={<LinkedInIcon />}
+                  className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white font-medium px-6 py-2"
+                  sx={{
+                    backdropFilter: 'blur(10px)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                    }
+                  }}
+                >
+                  Compartilhar no LinkedIn
+                </Button>
+              </Tooltip>
             </motion.div>
           )}
         </CardContent>
