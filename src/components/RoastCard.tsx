@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, Typography, Avatar, Button, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Avatar, Button, Tooltip, Snackbar, Alert } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -19,6 +19,7 @@ interface RoastCardProps {
 export default function RoastCard({ roast, profileUrl, profileImage }: RoastCardProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const username = profileUrl.split('/').pop() || '';
@@ -31,7 +32,7 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
   const handleShareLinkedIn = () => {
     const tempTextArea = document.createElement('textarea');
     const projectUrl = process.env.NEXT_PUBLIC_PROJECT_URL || 'https://github.com/deyvisontav/profile-humiliator';
-    const shareText = `🎭 Roast Profissional baseado no meu perfil do GitHub:\n\n${roast}\n\nEste roast foi gerado pelo Profile Humiliator, um projeto que analisa perfis do GitHub de forma bem-humorada. Confira: ${projectUrl}\n\n#RoastProfissional #GitHub #HumorTech #ProfileHumiliator`;
+    const shareText = `🎭 Humilhação Profissional baseado no meu perfil do GitHub:\n\n${roast}\n\nEste roast foi gerado pelo Profile Humiliator, um projeto que analisa perfis do GitHub de forma bem-humorada. Confira: ${projectUrl}\n\n#HumilhaçoProfissional #GitHub #HumorTech #ProfileHumiliator`;
     
     tempTextArea.value = shareText;
     document.body.appendChild(tempTextArea);
@@ -39,12 +40,14 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
     document.execCommand('copy');
     document.body.removeChild(tempTextArea);
 
-    // Abrir o LinkedIn com o texto copiado
     const linkedInUrl = 'https://www.linkedin.com/feed/';
     window.open(linkedInUrl, '_blank');
     
-    // Mostrar mensagem para o usuário
-    alert('O texto do seu roast foi copiado! Cole no LinkedIn para compartilhar. 😈');
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   useEffect(() => {
@@ -174,6 +177,21 @@ export default function RoastCard({ roast, profileUrl, profileImage }: RoastCard
           )}
         </CardContent>
       </Card>
+      
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          O texto do seu roast foi copiado! Cole no LinkedIn para compartilhar. 😈
+        </Alert>
+      </Snackbar>
     </motion.div>
   );
 } 
