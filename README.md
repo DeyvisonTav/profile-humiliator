@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Profile Humiliator
 
-## Getting Started
+Uma aplicação web que analisa perfis do GitHub e gera "roasts" (zoeiras) personalizadas baseadas nas atividades e contribuições do usuário.
 
-First, run the development server:
+## 🚀 Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Análise de Perfil do GitHub**: Conecte-se com sua conta do GitHub para analisar seu perfil
+- **Geração de Roasts Personalizados**: Receba zoeiras únicas baseadas em suas atividades no GitHub
+- **Exportação de Roasts**: Salve seus roasts em formato PDF
+- **Interface Moderna**: Design responsivo e intuitivo usando Material-UI e TailwindCSS
+- **Tema Escuro/Claro**: Suporte a diferentes temas de interface
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Frontend**:
+  - Next.js 15.3.0
+  - React 18
+  - Material-UI (MUI)
+  - TailwindCSS
+  - Framer Motion
+  - React Toastify
+
+- **Backend**:
+  - API do GitHub
+  - OpenAI API
+  - Puppeteer Core
+  - PDFMake
+
+## 📦 Dependências Principais
+
+- `@mui/material` e `@mui/icons-material`: Componentes de UI
+- `framer-motion`: Animações
+- `html2canvas` e `jspdf`: Geração de PDFs
+- `openai`: Integração com IA
+- `puppeteer-core`: Automação de navegador
+- `react-toastify`: Notificações
+
+## 🚀 Como Executar
+
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Configure as variáveis de ambiente:
+   - Crie um arquivo `.env` com as seguintes variáveis:
+     ```
+     OPENAI_API_KEY=sua_chave_aqui
+     ```
+4. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+## 📝 Estrutura do Projeto
+
+```
+src/
+├── app/              # Rotas e páginas
+├── components/       # Componentes React
+│   ├── RoastCard.tsx
+│   ├── GithubProfileAnalyzer.tsx
+│   └── ThemeRegistry.tsx
+├── services/         # Serviços e utilitários
+│   └── githubParser.ts
+└── public/          # Arquivos estáticos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🤝 Contribuição
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📄 Licença
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este projeto está sob a licença MIT.
